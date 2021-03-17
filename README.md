@@ -1,2 +1,2 @@
 # PAO
- Programare avansata pe obiecte -
+ Programare avansata pe obiecte
