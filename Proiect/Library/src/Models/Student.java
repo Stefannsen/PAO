@@ -1,4 +1,6 @@
 package Models;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Student extends Customer{
@@ -11,7 +13,7 @@ public class Student extends Customer{
         super(name, cnp);
         this.universityName = universityName;
         this.yearOfStudy = yearOfStudy;
-        this.borrowedBooks = new Book[booksLimit];
+        this.borrowedBooks = new HashSet<Book>();
     }
 
     public Student() {
@@ -45,6 +47,16 @@ public class Student extends Customer{
         super.showCustomer();
         System.out.println("Type: " + getCls() + "\nUniversity: " + universityName + "\nYear: " + yearOfStudy +
                 "\nPass price" +  calculatePassPrice() + "\n************");
+
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 }

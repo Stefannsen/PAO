@@ -3,7 +3,7 @@ package Models;
 
 import java.util.Objects;
 
-public class Book {
+public class Book implements Comparable<Book>{
     private static int count = 0;
     private final String id;
     private String bookName;
@@ -118,4 +118,10 @@ public class Book {
     }
 
 
+    @Override
+    public int compareTo(Book o) {
+        int c_name = this.bookName.compareTo(o.getBookName());
+        int c_nr   = this.nrOfCopies - o.getNrOfCopies();
+        return (c_name == 0) ? c_nr : c_name;
+    }
 }

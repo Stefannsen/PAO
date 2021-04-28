@@ -1,83 +1,75 @@
 package Services;
-
 import Models.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
+
+import java.io.IOException;
+import java.util.*;
 
 public class CustomerService {
-    private int count = 0;
-    private int countH = 0;
-    public Customer[] customers;
-    public BorrowInfo[] history;
+
+    public ArrayList<Customer> customers;
+    public ArrayList<BorrowInfo> history;
 
     public CustomerService(){
-        customers = new Customer[100];
-        history = new BorrowInfo[100];
+        customers = new ArrayList<Customer>();
+        history = new ArrayList<BorrowInfo>();
     }
 
-    public int isCustomer(String id){
-        for(int i = 0; i < count; i++)
-            if(customers[i].getId().equals(id))
-                return i;
-        return -1;
+    public int isCustomer(Customer customer){
+        return customers.indexOf(customer);
     }
 
-    public void addCustomer(Customer customer){
-        if(isCustomer(customer.getId()) > -1)
+    public void addCustomer(Customer customer) throws IOException {
+        Audit.getInstance().writeInfo();
+        if(isCustomer(customer) != -1)
             System.out.println("This is already a customer!");
-        else{
-            if(count + 1 < 100)
-                customers[count++] = customer;
-            else
-                System.out.println("Come back later!");
-        }
+        else
+            customers.add(customer);
     }
 
-    public void displayAllCustomers(){
-        if(count == 0)
+    public void displayAllCustomers() throws IOException {
+        Audit.getInstance().writeInfo();
+        if(customers.isEmpty())
             System.out.println("There are not any customers yet :(");
         else{
-            for(int i = 0; i < count; i++)
-                customers[i].showCustomer();
+            for(Customer customer : customers)
+                System.out.println(customer.toString());
         }
     }
 
-    public void displayCheckedOutBooks(String id){
-        int index = isCustomer(id);
+    public void displayCheckedOutBooks(Customer customer) throws IOException {
+        Audit.getInstance().writeInfo();
+        int index = isCustomer(customer);
         if(index != -1){
-            System.out.println(Arrays.toString(customers[index].getBorrowedBooks()));
+            customer.getBorrowedBooks().forEach(System.out::println);
         }
         else
             System.out.println("Not found!");
     }
 
 
-    public void displayHistory(){
-        for(int i = 0; i < countH; i++){
-            System.out.println(history[i].toString());
-        }
+    public void displayHistory() throws IOException {
+        Audit.getInstance().writeInfo();
+        for(BorrowInfo b : history)
+            System.out.println(b.toString());
     }
 
-    public void sortCustomersByName(){
-       Customer[] arr = new Customer[count];
-       System.arraycopy(customers, 0, arr, 0, 3);
-       Arrays.sort(arr, new CustomersSortedByName());
-       for(int i = 0; i < count; i++)
-           arr[i].showCustomer();
+    public void sortCustomersByName() throws IOException {
+        Audit.getInstance().writeInfo();
+       customers.stream()
+               .sorted((c1, c2) -> c1.getName().compareTo(c2.getName()))
+               .forEach(Customer::showCustomer);
     }
 
-    public void checkOutBook(String id, String bookId, BookService books){
-        int cIndex = isCustomer(id);
-        if(cIndex == -1)
-            System.out.println("Not found!");
+    public void checkOutBook(Customer customer, Book book, BookService bs) throws IOException {
+        Audit.getInstance().writeInfo();
+        if(!customers.contains(customer))
+            System.out.println("Not found!=========");
         else{
-            Book book = books.checkOutBook(bookId);
-            if(book != null){
-                if(customers[cIndex].getNrOfBooks() < customers[cIndex].getBooksLimit()) {
-                    customers[cIndex].getBorrowedBooks()[customers[cIndex].getNrOfBooks()] = book;
-                    customers[cIndex].setNrOfBooks(customers[cIndex].getNrOfBooks() + 1);
-                    history[countH++] = new BorrowInfo(customers[cIndex], book, new Date());
+            Book checkOutBook = bs.checkOutBook(book);
+            if(checkOutBook != null){
+                if(customer.getNrOfBooks() < customer.getBooksLimit()) {
+                    customer.getBorrowedBooks().add(checkOutBook);
+                    history.add(new BorrowInfo(customer, checkOutBook));
                 }
                 else{
                     System.out.println("The customer can't get more than 5 books at the same time!");
@@ -86,25 +78,20 @@ public class CustomerService {
         }
     }
 
-    public void checkInBook(String id, String bookId, BookService books){
-        int cIndex = isCustomer(id);
-        if(cIndex == -1)
+    public void checkInBook(Customer customer, Book book, BookService bs) throws IOException {
+        Audit.getInstance().writeInfo();
+        if(!customers.contains(customer))
             System.out.println("Not found!");
         else{
-            Book[] borrowedBooks = customers[cIndex].getBorrowedBooks();
-            int nrb = customers[cIndex].getNrOfBooks();
-            Book book = books.checkInBook(bookId);
-            if(book != null) {
-                for(int i = 0; i < nrb; i++)
-                    if(borrowedBooks[i].getId().equals(bookId)) {
-                        System.arraycopy(borrowedBooks, i +1, borrowedBooks, i, nrb - 1 - i);
-                        borrowedBooks[nrb-1] = null;
-                        customers[cIndex].setNrOfBooks(nrb - 1);
-                        for(int j = 0; j < countH; j++)
-                            if(history[j].getCustomer().getId().equals(id) && history[j].getBook().getId().equals(bookId)){
-                                history[j].setReturnDate(new Date());
-                            }
-                        break;
+            HashSet<Book> borrowedBooks = customer.getBorrowedBooks();
+            int nrb = customer.getNrOfBooks();
+            Book checkInBook = bs.checkInBook(book);
+            if(checkInBook != null) {
+               borrowedBooks.remove(book);
+               for(BorrowInfo b : history)
+                   if(b.getCustomer().equals(customer) && b.getBook().equals(book)){
+                       b.setReturnDate(new Date());
+                       break;
                     }
             }
         }

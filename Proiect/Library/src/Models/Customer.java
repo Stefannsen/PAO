@@ -1,12 +1,13 @@
 package Models;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Scanner;
 
 public abstract class Customer {
     protected String id;
     protected String name;
     protected String cnp;
-    Book[] borrowedBooks;
-    public int nrOfBooks = 0;
+    HashSet<Book> borrowedBooks;
 
     public Customer(String name, String cnp) {
         this.name = name;
@@ -18,7 +19,7 @@ public abstract class Customer {
         Scanner scanner = new Scanner(System.in);
         this.name = scanner.nextLine();
         this.cnp = scanner.nextLine();
-        borrowedBooks = new Book[5];
+        borrowedBooks = new HashSet<Book>();
     }
 
     public String getId() {
@@ -38,20 +39,16 @@ public abstract class Customer {
     }
 
 
-    public Book[] getBorrowedBooks() {
+    public HashSet<Book> getBorrowedBooks() {
         return borrowedBooks;
     }
 
-    public void setBorrowedBooks(Book[] borrowedBooks) {
+    public void setBorrowedBooks(HashSet<Book> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
     }
 
     public int getNrOfBooks() {
-        return nrOfBooks;
-    }
-
-    public void setNrOfBooks(int nrOfBooks) {
-        this.nrOfBooks = nrOfBooks;
+        return borrowedBooks.size();
     }
 
     public abstract int getBooksLimit();
@@ -59,7 +56,20 @@ public abstract class Customer {
     public abstract int calculatePassPrice();
     public abstract String getCls();
 
-    public  void showCustomer(){
+    public void showCustomer(){
         System.out.println("************" + "\nName: " + name + "\nCNP: " + cnp);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return id.equals(customer.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

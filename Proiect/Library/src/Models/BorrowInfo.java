@@ -8,10 +8,10 @@ public class BorrowInfo {
     private Date borrowDate;
     private Date returnDate;
 
-    public BorrowInfo(Customer customer, Book book, Date borrowDate) {
+    public BorrowInfo(Customer customer, Book book) {
         this.customer = customer;
         this.book = book;
-        this.borrowDate = borrowDate;
+        this.borrowDate = new Date();
     }
 
     public Customer getCustomer() {

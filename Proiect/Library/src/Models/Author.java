@@ -1,6 +1,8 @@
 package Models;
 
 
+import java.util.Objects;
+
 public class Author {
     public static int count = 1;
     public final String id;
@@ -45,4 +47,16 @@ public class Author {
         this.nationality = nationality;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Author author = (Author) o;
+        return Objects.equals(id, author.id) && Objects.equals(name, author.name) && Objects.equals(nationality, author.nationality);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, nationality);
+    }
 }

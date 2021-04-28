@@ -1,12 +1,14 @@
 package Models;
 
+import java.util.HashSet;
+
 public class VIPReader extends Customer{
 
     private final static int booksLimit = 100;
 
     public VIPReader(String name, String cnp) {
         super(name, cnp);
-        this.borrowedBooks = new Book[booksLimit];
+        this.borrowedBooks = new HashSet<Book>();
     }
 
     public  int getBooksLimit() {
@@ -21,5 +23,19 @@ public class VIPReader extends Customer{
     @Override
     public String getCls() {
         return "VIP Reader";
+    }
+
+    public VIPReader() {
+        super();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }
