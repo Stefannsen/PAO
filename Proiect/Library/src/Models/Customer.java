@@ -3,61 +3,57 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Scanner;
 
-public abstract class Customer {
-    protected String id;
-    protected String name;
+public class Customer {
+    protected int id;
+    protected String lastName;
+    protected String firstName;
     protected String cnp;
-    HashSet<Book> borrowedBooks;
 
-    public Customer(String name, String cnp) {
-        this.name = name;
+    public Customer(int id, String lastName, String firstName, String cnp) {
+        this.id = id;
+        this.lastName = lastName;
+        this.firstName = firstName;
         this.cnp = cnp;
-       // borrowedBooks = new Book[5];
     }
 
-    public Customer() {
-        Scanner scanner = new Scanner(System.in);
-        this.name = scanner.nextLine();
-        this.cnp = scanner.nextLine();
-        borrowedBooks = new HashSet<Book>();
-    }
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getCnp() {
         return cnp;
     }
 
-
-    public HashSet<Book> getBorrowedBooks() {
-        return borrowedBooks;
+    public void setCnp(String cnp) {
+        this.cnp = cnp;
     }
 
-    public void setBorrowedBooks(HashSet<Book> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
-
-    public int getNrOfBooks() {
-        return borrowedBooks.size();
-    }
-
-    public abstract int getBooksLimit();
-
-    public abstract int calculatePassPrice();
-    public abstract String getCls();
+    public int calculatePassPrice() {return 0;};
+    public String getCls() {return "";};
 
     public void showCustomer(){
-        System.out.println("************" + "\nName: " + name + "\nCNP: " + cnp);
+        System.out.println("************" + "\nName: " + lastName + " " +
+                firstName + " " + "\nCNP: " + cnp);
     }
 
     @Override
@@ -65,7 +61,7 @@ public abstract class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return id.equals(customer.id);
+        return id == customer.id;
     }
 
     @Override

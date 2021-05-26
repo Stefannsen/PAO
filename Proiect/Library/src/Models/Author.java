@@ -4,39 +4,47 @@ package Models;
 import java.util.Objects;
 
 public class Author {
-    public static int count = 1;
-    public final String id;
-    public String name;
-    public String nationality;
-    // public Book[] books;
 
-    public Author(String name, String nationality) {
-        this.name = name;
+    private int id;
+    private String firstName;
+    private String lastName;
+    private String nationality;
+
+    public Author(int id, String lastName, String firstName, String nationality) {
+        this.id = id;
+        this.lastName = lastName;
+        this.firstName = firstName;
         this.nationality = nationality;
     }
 
-    {
-        this.id = "a" + count;
-        count++;
+    public Author(String lastName, String firstName, String nationality) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.nationality = nationality;
     }
 
-    @Override
-    public String toString() {
-        return "Author{" +
-                "Name:: " + name +
-                "\nCountry" + nationality;
-    }
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getNationality() {
@@ -52,11 +60,25 @@ public class Author {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
-        return Objects.equals(id, author.id) && Objects.equals(name, author.name) && Objects.equals(nationality, author.nationality);
+        return id == author.id && Objects.equals(firstName, author.firstName) && Objects.equals(lastName, author.lastName) && Objects.equals(nationality, author.nationality);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, nationality);
+        return Objects.hash(id, firstName, lastName, nationality);
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nationality='" + nationality + '\'' +
+                '}';
     }
 }
+
+
+
+

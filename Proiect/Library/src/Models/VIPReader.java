@@ -6,9 +6,8 @@ public class VIPReader extends Customer{
 
     private final static int booksLimit = 100;
 
-    public VIPReader(String name, String cnp) {
-        super(name, cnp);
-        this.borrowedBooks = new HashSet<Book>();
+    public VIPReader(int id, String lastName, String firstName, String cnp) {
+        super(id, lastName, firstName, cnp);
     }
 
     public  int getBooksLimit() {
@@ -25,8 +24,9 @@ public class VIPReader extends Customer{
         return "VIP Reader";
     }
 
-    public VIPReader() {
-        super();
+    @Override
+    public int getId() {
+        return super.getId();
     }
 
     @Override

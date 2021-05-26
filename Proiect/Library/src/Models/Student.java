@@ -6,29 +6,15 @@ import java.util.Scanner;
 public class Student extends Customer{
     private String universityName;
     private int yearOfStudy;
-    private static int count = 0;
     private final static int booksLimit = 5;
 
-    public Student(String name, String cnp, String universityName, int yearOfStudy) {
-        super(name, cnp);
+    public Student(int id, String lastName, String firstName, String cnp, String universityName, int yearOfStudy) {
+        super(id, lastName, firstName, cnp);
         this.universityName = universityName;
         this.yearOfStudy = yearOfStudy;
-        this.borrowedBooks = new HashSet<Book>();
     }
 
-    public Student() {
-        super();
-        Scanner scanner = new Scanner(System.in);
-        this.universityName = scanner.nextLine();
-        this.yearOfStudy = scanner.nextInt();
-    }
-
-    {
-        count++;
-        this.id = "s" + count;
-    }
-
-    public  int getBooksLimit() {
+    public int getBooksLimit() {
         return booksLimit;
     }
 
@@ -40,6 +26,11 @@ public class Student extends Customer{
     @Override
     public String getCls() {
         return "Student";
+    }
+
+    @Override
+    public int getId() {
+        return super.getId();
     }
 
     @Override

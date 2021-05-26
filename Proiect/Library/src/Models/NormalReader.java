@@ -3,22 +3,10 @@ package Models;
 import java.util.HashSet;
 
 public class NormalReader extends Customer{
-    private static int count = 0;
     private final static int booksLimit = 5;
 
-    public NormalReader(String name, String cnp){
-        super(name, cnp);
-        this.borrowedBooks = new HashSet<Book>();
-
-    }
-
-    public NormalReader(){
-        super();
-    }
-
-    {
-        count++;
-        this.id = "nr" + count;
+    public NormalReader(int id, String lastName, String firstName, String cnp) {
+        super(id, lastName, firstName, cnp);
     }
 
     public  int getBooksLimit() {
@@ -43,7 +31,7 @@ public class NormalReader extends Customer{
     }
 
     @Override
-    public String getId() {
+    public int getId() {
         return super.getId();
     }
 

@@ -1,41 +1,90 @@
 package Models;
 
+import Repositories.AuthorRepository;
+import Repositories.PublisherRepository;
+import Repositories.SectionRepository;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class Book implements Comparable<Book>{
-    private static int count = 0;
-    private final String id;
+    private int id;
     private String bookName;
     private int nrOfCopies;
     private int crtNrOfCopies;
+    private int sectionId;
+    private int authorId;
+    private int publisherId;
     private Section section;
     private Author author;
     private Publisher publisher;
 
-    public Book(String bookName, int nrOfCopies) {
+    public Book(int id, String bookName, int nrOfCopies, int crtNrOfCopies){
+        this.id = id;
+        this.bookName = bookName;
+        this.nrOfCopies = nrOfCopies;
+        this.crtNrOfCopies = crtNrOfCopies;
+    }
+
+    public Book(String bookName, int nrOfCopies, int sectionId, int authorId, int publisherId) {
         this.bookName = bookName;
         this.nrOfCopies = nrOfCopies;
         this.crtNrOfCopies = nrOfCopies;
+        this.sectionId = sectionId;
+        this.authorId = authorId;
+        this.publisherId = publisherId;
+
+        SectionRepository sectionRepository = SectionRepository.getInstance();
+        Optional<Section> section = sectionRepository.getById(sectionId);
+        if(section.isPresent()){
+            this.section = section.get();
+        }
+
+        PublisherRepository publisherRepository = PublisherRepository.getInstance();
+        Optional<Publisher> publisher = publisherRepository.getById(publisherId);
+        if(publisher.isPresent()){
+            this.publisher = publisher.get();
+        }
+
+        Optional<Author> author = AuthorRepository.getInstance().getById(authorId);
+        if(author.isPresent())  {
+            this.author = author.get();
+        }
     }
 
-    public Book(String bookName, int nrOfCopies, Author author, Publisher publisher) {
+    public Book(int id, String bookName, int nrOfCopies, int crtNrOfCopies,  int sectionId, int authorId, int publisherId) {
+        this.id = id;
         this.bookName = bookName;
         this.nrOfCopies = nrOfCopies;
-        this.crtNrOfCopies = nrOfCopies;
-        this.author = author;
-        this.publisher = publisher;
+        this.crtNrOfCopies = crtNrOfCopies;
+        this.sectionId = sectionId;
+        this.authorId = authorId;
+        this.publisherId = publisherId;
+
+        SectionRepository sectionRepository = SectionRepository.getInstance();
+        Optional<Section> section = sectionRepository.getById(sectionId);
+        if(section.isPresent()){
+            this.section = section.get();
+        }
+
+        PublisherRepository publisherRepository = PublisherRepository.getInstance();
+        Optional<Publisher> publisher = publisherRepository.getById(publisherId);
+        if(publisher.isPresent()){
+            this.publisher = publisher.get();
+        }
+
+        Optional<Author> author = AuthorRepository.getInstance().getById(authorId);
+        if(author.isPresent())  {
+            this.author = author.get();
+        }
     }
 
-    public Book(){}
-
-    {
-        count++;
-        this.id = "b" + count;
-    }
-
-    public String getId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBookName() {
@@ -93,12 +142,37 @@ public class Book implements Comparable<Book>{
             return Availability.Available;
     }
 
+    public int getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(int sectionId) {
+        this.sectionId = sectionId;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public int getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(int publisherId) {
+        this.publisherId = publisherId;
+    }
+
     @Override
     public String toString() {
         return "**********************\n" +
                 "ID: " + this.id +
                 "\nTitle: " + this.bookName +
-                "\nAuthor: " + this.author.getName() +
+                "\nAuthor: " + this.author.getFirstName() + " " +
+                this.author.getLastName() +
                 "\nStatus: " + this.checkAvailability() +
                 "\n**********************";
     }
@@ -108,20 +182,18 @@ public class Book implements Comparable<Book>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(bookName, book.bookName) && Objects.equals(author.getName(),
-                book.author.getName());
+        return id == book.id && nrOfCopies == book.nrOfCopies && crtNrOfCopies == book.crtNrOfCopies && sectionId == book.sectionId && authorId == book.authorId && publisherId == book.publisherId && Objects.equals(bookName, book.bookName) && Objects.equals(section, book.section) && Objects.equals(author, book.author) && Objects.equals(publisher, book.publisher);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookName, author.getName());
+        return Objects.hash(id, bookName, nrOfCopies, crtNrOfCopies, sectionId, authorId, publisherId, section, author, publisher);
     }
-
 
     @Override
     public int compareTo(Book o) {
-        int c_name = this.bookName.compareTo(o.getBookName());
+        int c_crtNr = this.crtNrOfCopies - o.getCrtNrOfCopies();
         int c_nr   = this.nrOfCopies - o.getNrOfCopies();
-        return (c_name == 0) ? c_nr : c_name;
+        return (c_crtNr == 0) ? c_nr : c_crtNr;
     }
 }
